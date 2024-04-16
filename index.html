@@ -20,10 +20,9 @@
             <a href=""><i class="ti ti-home"></i> Beranda</a>
           </li>
           <li>
-            <a href=""
-              ><i class="ti ti-plus"></i><i class="ti ti-book-2"></i> Tambah
-              Buku</a
-            >
+            <button id="add-book-button">
+              <i class="ti ti-plus"></i><i class="ti ti-book-2"></i> Tambah Buku
+            </button>
           </li>
           <li class="bookshelf-nav">
             <button>
@@ -44,56 +43,63 @@
     </header>
 
     <main>
-      <section class="card">
-        <h2>Tambah Buku</h2>
+      <section id="add-book" class="hidden">
+        <div>
+          <h2>Tambah Buku</h2>
 
-        <form id="book-form">
-          <i class="ti ti-book-2 form-book-icon"></i>
+          <form id="book-form">
+            <i class="ti ti-book-2 form-book-icon"></i>
 
-          <div class="input-elements">
-            <div class="input-form">
-              <label for="title" id="title-label" hidden>Judul</label>
-              <input
-                type="text"
-                id="title"
-                placeholder="Judul"
-                class="default-input"
-                required
-              />
+            <div class="input-elements">
+              <div class="input-form">
+                <label for="title" id="title-label" hidden>Judul</label>
+                <input
+                  type="text"
+                  id="title"
+                  placeholder="Judul"
+                  class="default-input"
+                  required
+                />
+              </div>
+
+              <div class="input-form">
+                <label for="author" id="author-label" hidden>Penulis</label>
+                <input
+                  type="text"
+                  id="author"
+                  placeholder="Penulis"
+                  class="default-input"
+                  required
+                />
+              </div>
+
+              <div class="input-form">
+                <label for="year" id="year-label" hidden>Tahun</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="2024"
+                  id="year"
+                  placeholder="Tahun"
+                  class="default-input"
+                  required
+                />
+              </div>
+
+              <div>
+                <input type="checkbox" id="is-completed" />
+                <label for="is-completed" id="is-completed-label"
+                  >Selesai Dibaca</label
+                >
+              </div>
+
+              <div class="form-button-wrapper">
+                <button type="submit">Tambah</button>
+                <button type="button" id="cancel-add-book-button">Batal</button>
+              </div>
             </div>
-
-            <div class="input-form">
-              <label for="author" id="author-label" hidden>Penulis</label>
-              <input
-                type="text"
-                id="author"
-                placeholder="Penulis"
-                class="default-input"
-                required
-              />
-            </div>
-
-            <div class="input-form">
-              <label for="year" id="year-label" hidden>Tahun</label>
-              <input
-                type="number"
-                id="year"
-                placeholder="Tahun"
-                class="default-input"
-                required
-              />
-            </div>
-
-            <div>
-              <input type="checkbox" id="is-completed" />
-              <label for="is-completed" id="is-completed-label"
-                >Selesai Dibaca</label
-              >
-            </div>
-
-            <button type="submit">Tambah</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </section>
 
       <section class="card" id="unfinished-book">

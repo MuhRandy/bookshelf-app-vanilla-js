@@ -1,4 +1,6 @@
 const storageKey = "STORAGE_KEY";
+const addBookButton = document.getElementById("add-book-button");
+const cancelAddBookButton = document.getElementById("cancel-add-book-button");
 const titleLabel = document.getElementById("title-label");
 const titleInput = document.getElementById("title");
 const authorLabel = document.getElementById("author-label");
@@ -12,6 +14,10 @@ floatingInputLabel(titleInput, titleLabel, "Judul");
 floatingInputLabel(authorInput, authorLabel, "Penulis");
 floatingInputLabel(yearInput, yearLabel, "Tahun");
 
+addBookButton.addEventListener("click", toggleShowAddBook);
+
+cancelAddBookButton.addEventListener("click", toggleShowAddBook);
+
 submitAction.addEventListener("submit", function (event) {
   event.preventDefault();
   const newBookData = {
@@ -23,6 +29,7 @@ submitAction.addEventListener("submit", function (event) {
   };
   putBookList(newBookData);
   submitAction.reset();
+  toggleShowAddBook();
   unfocusAllInput();
   renderBookList();
 });
@@ -57,6 +64,7 @@ function unfocusAllInput() {
   titleInput.focus();
   authorInput.focus();
   yearInput.focus();
+
   titleInput.blur();
   authorInput.blur();
   yearInput.blur();
@@ -160,26 +168,10 @@ function generateWhenNoBook(bookList, text) {
 function generateBook(bookData) {
   const book = createElementWithClass("article", "book");
   const bookIcon = createElementWithClass("i", "ti", "ti-book-2", "book-icon");
-
-  book.appendChild(bookIcon);
-
   const wrapper = document.createElement("div");
   const title = document.createElement("h3");
   const author = createElementWithClass("p", "book-author");
-
-  title.innerText = `${bookData.title} (${bookData.year})`;
-  author.innerText = bookData.author;
-
-  wrapper.appendChild(title);
-  wrapper.appendChild(author);
-
   const buttonWrapper = document.createElement("div");
-
-  const finishedButton = createElementWithClass(
-    "button",
-    "finished-book-button",
-    "book-button"
-  );
   const deleteButton = createElementWithClass(
     "button",
     "delete-button",
@@ -187,23 +179,49 @@ function generateBook(bookData) {
   );
   const trashIcon = createElementWithClass("i", "ti", "ti-trash");
 
+  title.innerText = `${bookData.title} (${bookData.year})`;
+  author.innerText = bookData.author;
+
+  if (bookData.isCompleted) {
+    const unfinishedButton = createElementWithClass(
+      "button",
+      "unfinished-book-button",
+      "book-button"
+    );
+
+    unfinishedButton.innerText = "Belum Selesai Dibaca";
+    unfinishedButton.addEventListener("click", function () {
+      toggleIsCompletedButtonHandler(bookData.id);
+    });
+
+    buttonWrapper.appendChild(unfinishedButton);
+  } else {
+    const finishedButton = createElementWithClass(
+      "button",
+      "finished-book-button",
+      "book-button"
+    );
+
+    finishedButton.innerText = "Selesai Dibaca";
+    finishedButton.addEventListener("click", function () {
+      toggleIsCompletedButtonHandler(bookData.id);
+    });
+
+    buttonWrapper.appendChild(finishedButton);
+  }
+
+  deleteButton.appendChild(trashIcon);
   deleteButton.addEventListener("click", function () {
     deleteButtonHandler(bookData.id);
   });
 
-  if (bookData.isCompleted) {
-    finishedButton.innerText = "Belum Selesai Dibaca";
-  } else {
-    finishedButton.innerText = "Selesai Dibaca";
-  }
-
-  deleteButton.appendChild(trashIcon);
-
-  buttonWrapper.appendChild(finishedButton);
   buttonWrapper.appendChild(deleteButton);
 
+  wrapper.appendChild(title);
+  wrapper.appendChild(author);
   wrapper.appendChild(buttonWrapper);
 
+  book.appendChild(bookIcon);
   book.appendChild(wrapper);
 
   return book;
@@ -233,6 +251,16 @@ function deleteButtonHandler(bookID) {
   }
 }
 
+function toggleIsCompletedButtonHandler(bookID) {
+  const bookData = getBookList();
+  const bookIndex = findBookIndex(bookID);
+
+  bookData[bookIndex].isCompleted = !bookData[bookIndex].isCompleted;
+  overideBookList(bookData);
+
+  renderBookList();
+}
+
 function generateId() {
   return +new Date();
 }
@@ -247,4 +275,10 @@ function findBookIndex(bookID) {
   }
 
   return -1;
+}
+
+function toggleShowAddBook() {
+  const addBook = document.getElementById("add-book");
+
+  addBook.classList.toggle("show");
 }
