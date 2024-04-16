@@ -1,0 +1,212 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  width: 500px;
+  min-height: 200px;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 20px 20px;
+}
+
+nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  background-color: white;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  transition: all 0.3s ease-in-out;
+}
+
+nav > ul > li:hover > a::after {
+  width: 100%;
+}
+
+.bookshelf-nav {
+  position: relative;
+}
+
+.bookshelf-nav button {
+  border: none;
+  background-color: initial;
+
+  color: inherit;
+
+  cursor: pointer;
+}
+
+.bookshelf-nav:hover .bookshelf-nav-content {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bookshelf-nav-content {
+  background-color: white;
+  padding: 5px;
+  box-shadow: 2px 2px 10px 0 black;
+  display: none;
+
+  position: absolute;
+  right: 0;
+
+  color: black;
+  text-wrap: nowrap;
+}
+
+.bookshelf-nav-content li a::after {
+  background-color: black;
+}
+
+.bookshelf-nav-content li:hover a::after {
+  width: 100%;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  min-height: 80dvh;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  align-items: center;
+}
+
+.form-book-icon {
+  font-size: 200px;
+}
+
+.input-elements {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.default-input {
+  border: none;
+  border-bottom: 1px solid gray;
+}
+
+.input-has-value {
+  border-color: black;
+}
+
+.default-input:focus {
+  outline: none;
+  border-bottom: 1px solid black;
+}
+
+.default-input,
+.default-input::placeholder,
+.input-form label {
+  font-size: 20px;
+}
+
+form button {
+  border: none;
+  border-radius: 5px;
+  background-color: black;
+  padding: 10px;
+
+  color: white;
+}
+
+#unfinished-book,
+#finished-book {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empty-books {
+  color: gray;
+}
+
+#unfinished-book-content,
+#finished-book-content {
+  margin: auto;
+}
+
+.not-empty {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.book {
+  display: flex;
+  align-items: center;
+}
+
+.book-icon {
+  font-size: 100px;
+}
+
+.book-author {
+  margin-bottom: 10px;
+}
+
+.book-button {
+  border: none;
+  background-color: black;
+  padding: 5px;
+  border-radius: 5px;
+
+  color: white;
+}
+
+.delete-button {
+  background-color: red;
+  margin-left: 5px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
