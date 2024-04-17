@@ -9,10 +9,19 @@ const yearLabel = document.getElementById("year-label");
 const yearInput = document.getElementById("year");
 const isCompleted = document.getElementById("is-completed");
 const submitAction = document.getElementById("book-form");
+const searchInput = document.getElementById("search-book");
 
 floatingInputLabel(titleInput, titleLabel, "Judul");
 floatingInputLabel(authorInput, authorLabel, "Penulis");
 floatingInputLabel(yearInput, yearLabel, "Tahun");
+
+window.addEventListener("load", function () {
+  if (checkForStorage) {
+    renderBookList();
+  } else {
+    alert("Browser yang Anda gunakan tidak mendukung Web Storage");
+  }
+});
 
 addBookButton.addEventListener("click", toggleShowAddBook);
 
@@ -20,6 +29,7 @@ cancelAddBookButton.addEventListener("click", toggleShowAddBook);
 
 submitAction.addEventListener("submit", function (event) {
   event.preventDefault();
+
   const newBookData = {
     id: generateId(),
     title: titleInput.value,
@@ -28,17 +38,20 @@ submitAction.addEventListener("submit", function (event) {
     isCompleted: isCompleted.checked,
   };
   putBookList(newBookData);
+
   submitAction.reset();
-  toggleShowAddBook();
   unfocusAllInput();
+  toggleShowAddBook();
   renderBookList();
 });
 
-window.addEventListener("load", function () {
-  if (checkForStorage) {
-    renderBookList();
+searchInput.addEventListener("input", function (event) {
+  const searchValue = event.target.value;
+
+  if (searchValue.length > 0) {
+    renderSearchBookList(searchValue);
   } else {
-    alert("Browser yang Anda gunakan tidak mendukung Web Storage");
+    renderBookList();
   }
 });
 
@@ -131,6 +144,40 @@ function renderBookList() {
       unfinishedBookList.appendChild(generateBook(book));
       unfinishedBookList.classList.add("not-empty");
     }
+  }
+}
+
+function renderSearchBookList(searchValue) {
+  const bookData = getBookList();
+  const unfinishedBookList = document.getElementById("unfinished-book-content");
+  const finishedBookList = document.getElementById("finished-book-content");
+  const regex = RegExp(`${searchValue}+`, "i");
+  let countFinishedBookSearch = 0;
+  let countUnfinishedBookSearch = 0;
+
+  finishedBookList.innerHTML = "";
+  unfinishedBookList.innerHTML = "";
+
+  for (let book of bookData) {
+    if (regex.test(book.title)) {
+      if (book.isCompleted) {
+        finishedBookList.appendChild(generateBook(book));
+        finishedBookList.classList.add("not-empty");
+        countFinishedBookSearch += 1;
+      } else {
+        unfinishedBookList.appendChild(generateBook(book));
+        unfinishedBookList.classList.add("not-empty");
+        countUnfinishedBookSearch += 1;
+      }
+    }
+  }
+
+  if (countUnfinishedBookSearch === 0) {
+    generateWhenNoBook(unfinishedBookList, "Tidak ada buku yang sesuai");
+  }
+
+  if (countFinishedBookSearch === 0) {
+    generateWhenNoBook(finishedBookList, "Tidak ada buku yang sesuai");
   }
 }
 
