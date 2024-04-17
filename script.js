@@ -139,10 +139,14 @@ function renderBookList() {
   for (let book of bookData) {
     if (book.isCompleted) {
       finishedBookList.appendChild(generateBook(book));
-      finishedBookList.classList.add("not-empty");
+      if (countFinishedBook > 1) {
+        finishedBookList.classList.add("not-empty");
+      }
     } else {
       unfinishedBookList.appendChild(generateBook(book));
-      unfinishedBookList.classList.add("not-empty");
+      if (countUnfinishedBook > 1) {
+        unfinishedBookList.classList.add("not-empty");
+      }
     }
   }
 }
@@ -238,7 +242,12 @@ function generateBook(bookData) {
 
     unfinishedButton.innerText = "Belum Selesai Dibaca";
     unfinishedButton.addEventListener("click", function () {
-      toggleIsCompletedButtonHandler(bookData.id);
+      createDialogElement(
+        "Pindahkan Buku",
+        `Pindahkan buku dengan judul ${bookData.title} ke rak Belum Selesai Dibaca?`,
+        "Pindahkan",
+        () => toggleIsCompletedButtonHandler(bookData.id)
+      );
     });
 
     buttonWrapper.appendChild(unfinishedButton);
@@ -251,7 +260,12 @@ function generateBook(bookData) {
 
     finishedButton.innerText = "Selesai Dibaca";
     finishedButton.addEventListener("click", function () {
-      toggleIsCompletedButtonHandler(bookData.id);
+      createDialogElement(
+        "Pindahkan Buku",
+        `Pindahkan buku dengan judul ${bookData.title} ke rak Selesai Dibaca?`,
+        "Pindahkan",
+        () => toggleIsCompletedButtonHandler(bookData.id)
+      );
     });
 
     buttonWrapper.appendChild(finishedButton);
@@ -283,19 +297,29 @@ function createElementWithClass(element, ...classLists) {
 }
 
 function deleteButtonHandler(bookID) {
-  if (confirm("Anda yakin ingin menghapus buku?")) {
-    const bookData = getBookList();
-    const bookTarget = findBookIndex(bookID);
+  const bookData = getBookList();
+  const bookTarget = findBookIndex(bookID);
 
-    if (bookTarget === -1) {
-      return;
-    }
+  createDialogElement(
+    "Hapus Buku",
+    `Hapus buku dengan judul ${bookData[bookTarget].title}`,
+    "Hapus",
+    () => deleteBook(bookID)
+  );
+}
 
-    bookData.splice(bookTarget, 1);
-    overideBookList(bookData);
+function deleteBook(bookID) {
+  const bookData = getBookList();
+  const bookTarget = findBookIndex(bookID);
 
-    renderBookList();
+  if (bookTarget === -1) {
+    return;
   }
+
+  bookData.splice(bookTarget, 1);
+  overideBookList(bookData);
+
+  renderBookList();
 }
 
 function toggleIsCompletedButtonHandler(bookID) {
@@ -328,4 +352,68 @@ function toggleShowAddBook() {
   const addBook = document.getElementById("add-book");
 
   addBook.classList.toggle("show");
+}
+
+function createDialogElement(
+  dialogTitle,
+  dialogDescription,
+  confirmText,
+  confirmButtonHandler
+) {
+  const main = document.querySelector("main");
+  const section = createElementWithClass("section", "show");
+  const card = createElementWithClass("div", "card");
+  const h2 = document.createElement("h2");
+  const costumDialogContent = createElementWithClass(
+    "div",
+    "custom-dialog-content"
+  );
+  const p = document.createElement("p");
+  const buttonWrapper = createElementWithClass("div", "button-wrapper");
+  const confirmButton = createElementWithClass("button", "book-button");
+  const cancelButton = createElementWithClass("button", "book-button");
+
+  section.setAttribute("id", "custom-dialog");
+
+  h2.innerText = dialogTitle;
+  h2.setAttribute("id", "custom-dialog-title");
+
+  p.innerText = dialogDescription;
+  p.setAttribute("id", "custom-dialog-description");
+
+  confirmButton.innerText = confirmText;
+  confirmButton.setAttribute("id", "custom-dialog-confirm-button");
+
+  cancelButton.innerText = "Batal";
+  cancelButton.setAttribute("id", "custom-dialog-cancel-button");
+
+  buttonWrapper.appendChild(confirmButton);
+  buttonWrapper.appendChild(cancelButton);
+
+  costumDialogContent.appendChild(p);
+  costumDialogContent.appendChild(buttonWrapper);
+
+  card.appendChild(h2);
+  card.appendChild(costumDialogContent);
+
+  section.appendChild(card);
+
+  main.appendChild(section);
+
+  const customDialog = document.getElementById("custom-dialog");
+  const dialogConfirmButton = document.getElementById(
+    "custom-dialog-confirm-button"
+  );
+  const dialogCancelButton = document.getElementById(
+    "custom-dialog-cancel-button"
+  );
+
+  dialogConfirmButton.addEventListener("click", function () {
+    confirmButtonHandler();
+    main.removeChild(customDialog);
+  });
+
+  dialogCancelButton.addEventListener("click", function () {
+    main.removeChild(customDialog);
+  });
 }
