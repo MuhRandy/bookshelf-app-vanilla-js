@@ -124,6 +124,8 @@ function renderBookList() {
 
   finishedBookList.innerHTML = "";
   unfinishedBookList.innerHTML = "";
+  finishedBookList.classList.remove("more-than-one-book");
+  unfinishedBookList.classList.remove("more-than-one-book");
 
   if (countUnfinishedBook === 0) {
     generateWhenNoBook(
@@ -140,12 +142,12 @@ function renderBookList() {
     if (book.isCompleted) {
       finishedBookList.appendChild(generateBook(book));
       if (countFinishedBook > 1) {
-        finishedBookList.classList.add("not-empty");
+        finishedBookList.classList.add("more-than-one-book");
       }
     } else {
       unfinishedBookList.appendChild(generateBook(book));
       if (countUnfinishedBook > 1) {
-        unfinishedBookList.classList.add("not-empty");
+        unfinishedBookList.classList.add("more-than-one-book");
       }
     }
   }
@@ -161,17 +163,23 @@ function renderSearchBookList(searchValue) {
 
   finishedBookList.innerHTML = "";
   unfinishedBookList.innerHTML = "";
+  finishedBookList.classList.remove("more-than-one-book");
+  unfinishedBookList.classList.remove("more-than-one-book");
 
   for (let book of bookData) {
     if (regex.test(book.title)) {
       if (book.isCompleted) {
         finishedBookList.appendChild(generateBook(book));
-        finishedBookList.classList.add("not-empty");
         countFinishedBookSearch += 1;
+        if (countFinishedBookSearch > 1) {
+          finishedBookList.classList.add("more-than-one-book");
+        }
       } else {
         unfinishedBookList.appendChild(generateBook(book));
-        unfinishedBookList.classList.add("not-empty");
         countUnfinishedBookSearch += 1;
+        if (countUnfinishedBookSearch > 1) {
+          unfinishedBookList.classList.add("more-than-one-book");
+        }
       }
     }
   }
@@ -211,7 +219,6 @@ function generateWhenNoBook(bookList, text) {
   p.classList.add("empty-books");
 
   bookList.appendChild(p);
-  bookList.classList.remove("not-empty");
 
   return bookList;
 }

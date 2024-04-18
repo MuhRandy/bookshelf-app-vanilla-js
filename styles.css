@@ -242,7 +242,7 @@ form button {
   margin: auto;
 }
 
-.not-empty {
+.more-than-one-book {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
