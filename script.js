@@ -1,4 +1,11 @@
 const storageKey = "STORAGE_KEY";
+const homeNavButton = document.getElementById("home-button");
+const unfinishedBookshelfButton = document.getElementById(
+  "unfinished-bookshelf-button"
+);
+const finishedBookshelfButton = document.getElementById(
+  "finished-bookshelf-button"
+);
 const addBookButton = document.getElementById("add-book-button");
 const cancelAddBookButton = document.getElementById("cancel-add-book-button");
 const titleLabel = document.getElementById("title-label");
@@ -10,6 +17,8 @@ const yearInput = document.getElementById("year");
 const isCompleted = document.getElementById("is-completed");
 const submitAction = document.getElementById("book-form");
 const searchInput = document.getElementById("search-book");
+const finishedBookshelf = document.getElementById("finished-bookshelf");
+const unfinishedBookshelf = document.getElementById("unfinished-bookshelf");
 
 floatingInputLabel(titleInput, titleLabel, "Judul");
 floatingInputLabel(authorInput, authorLabel, "Penulis");
@@ -17,10 +26,37 @@ floatingInputLabel(yearInput, yearLabel, "Tahun");
 
 window.addEventListener("load", function () {
   if (checkForStorage) {
+    alert(
+      "Jika ingin generate Fake Data, Anda bisa jalankan generateFakeData() pada console"
+    );
     renderBookList();
   } else {
     alert("Browser yang Anda gunakan tidak mendukung Web Storage");
   }
+});
+
+unfinishedBookshelfButton.addEventListener("click", function () {
+  finishedBookshelf.classList.remove("card");
+  finishedBookshelf.classList.remove("bookshelf");
+
+  unfinishedBookshelf.classList.add("card");
+  unfinishedBookshelf.classList.add("bookshelf");
+});
+
+finishedBookshelfButton.addEventListener("click", function () {
+  unfinishedBookshelf.classList.remove("card");
+  unfinishedBookshelf.classList.remove("bookshelf");
+
+  finishedBookshelf.classList.add("card");
+  finishedBookshelf.classList.add("bookshelf");
+});
+
+homeNavButton.addEventListener("click", () => {
+  unfinishedBookshelf.classList.add("card");
+  unfinishedBookshelf.classList.add("bookshelf");
+
+  finishedBookshelf.classList.add("card");
+  finishedBookshelf.classList.add("bookshelf");
 });
 
 addBookButton.addEventListener("click", toggleShowAddBook);
@@ -225,7 +261,7 @@ function generateWhenNoBook(bookList, text) {
 
 function generateBook(bookData) {
   const book = createElementWithClass("article", "book");
-  const bookIcon = createElementWithClass("i", "ti", "ti-book-2", "book-icon");
+  const bookIcon = createIconElement("book-2", "book-icon");
   const wrapper = document.createElement("div");
   const title = document.createElement("h3");
   const author = createElementWithClass("p", "book-author");
@@ -233,9 +269,10 @@ function generateBook(bookData) {
   const deleteButton = createElementWithClass(
     "button",
     "delete-button",
-    "book-button"
+    "book-button",
+    "tooltip"
   );
-  const trashIcon = createElementWithClass("i", "ti", "ti-trash");
+  const trashIcon = createIconElement("trash");
 
   title.innerText = `${bookData.title} (${bookData.year})`;
   author.innerText = bookData.author;
@@ -244,10 +281,13 @@ function generateBook(bookData) {
     const unfinishedButton = createElementWithClass(
       "button",
       "unfinished-book-button",
-      "book-button"
+      "book-button",
+      "tooltip"
     );
+    const moveIcon = createIconElement("arrows-sort");
 
-    unfinishedButton.innerText = "Belum Selesai Dibaca";
+    unfinishedButton.appendChild(moveIcon);
+    unfinishedButton.setAttribute("data-tooltip", "Belum selesai dibaca");
     unfinishedButton.addEventListener("click", function () {
       createDialogElement(
         "Pindahkan Buku",
@@ -262,10 +302,13 @@ function generateBook(bookData) {
     const finishedButton = createElementWithClass(
       "button",
       "finished-book-button",
-      "book-button"
+      "book-button",
+      "tooltip"
     );
+    const moveIcon = createIconElement("arrows-sort");
 
-    finishedButton.innerText = "Selesai Dibaca";
+    finishedButton.appendChild(moveIcon);
+    finishedButton.setAttribute("data-tooltip", "Selesai dibaca");
     finishedButton.addEventListener("click", function () {
       createDialogElement(
         "Pindahkan Buku",
@@ -279,6 +322,8 @@ function generateBook(bookData) {
   }
 
   deleteButton.appendChild(trashIcon);
+  deleteButton.setAttribute("data-tooltip", "Hapus buku");
+  deleteButton.setAttribute("name", "hapus");
   deleteButton.addEventListener("click", function () {
     deleteButtonHandler(bookData.id);
   });
@@ -423,4 +468,126 @@ function createDialogElement(
   dialogCancelButton.addEventListener("click", function () {
     main.removeChild(customDialog);
   });
+}
+
+function generateFakeData() {
+  const bookData = [
+    {
+      id: 987654321,
+      title: "The Subtle Art of not Giving a F*ck",
+      author: "Mark Manson",
+      year: 2016,
+      isCompleted: true,
+    },
+    {
+      id: 456789123,
+      title: "The Psychology of Money",
+      author: "Morgan Housel",
+      year: 2020,
+      isCompleted: true,
+    },
+    {
+      id: 147258369,
+      title: "Sapiens: A Brief History of Humankind",
+      author: "Yuval Noah Harari",
+      year: 2014,
+      isCompleted: false,
+    },
+    {
+      id: 789123456,
+      title: "Atomic Habits",
+      author: "James Clear",
+      year: 2018,
+      isCompleted: true,
+    },
+    {
+      id: 654321987,
+      title: "Educated",
+      author: "Tara Westover",
+      year: 2018,
+      isCompleted: false,
+    },
+    {
+      id: 321654987,
+      title: "The Alchemist",
+      author: "Paulo Coelho",
+      year: 1988,
+      isCompleted: true,
+    },
+    {
+      id: 789456123,
+      title: "1984",
+      author: "George Orwell",
+      year: 1949,
+      isCompleted: true,
+    },
+    {
+      id: 159753468,
+      title: "To Kill a Mockingbird",
+      author: "Harper Lee",
+      year: 1960,
+      isCompleted: true,
+    },
+    {
+      id: 369258147,
+      title: "Harry Potter and the Sorcerer's Stone",
+      author: "J.K. Rowling",
+      year: 1997,
+      isCompleted: true,
+    },
+    {
+      id: 852741963,
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      year: 1925,
+      isCompleted: true,
+    },
+    {
+      id: 123456789,
+      title: "The Catcher in the Rye",
+      author: "J.D. Salinger",
+      year: 1951,
+      isCompleted: false,
+    },
+    {
+      id: 951236874,
+      title: "Pride and Prejudice",
+      author: "Jane Austen",
+      year: 1813,
+      isCompleted: false,
+    },
+    {
+      id: 456123789,
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      year: 1937,
+      isCompleted: false,
+    },
+    {
+      id: 789632145,
+      title: "The Lord of the Rings",
+      author: "J.R.R. Tolkien",
+      year: 1954,
+      isCompleted: false,
+    },
+    {
+      id: 369874512,
+      title: "Crime and Punishment",
+      author: "Fyodor Dostoevsky",
+      year: 1866,
+      isCompleted: false,
+    },
+  ];
+
+  overideBookList(bookData);
+
+  renderBookList();
+
+  console.log("Buku berhasil digenerate");
+}
+
+function createIconElement(iconCode, className) {
+  const i = createElementWithClass("i", "ti", `ti-${iconCode}`, className);
+
+  return i;
 }

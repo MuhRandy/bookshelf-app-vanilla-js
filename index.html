@@ -17,7 +17,7 @@
       <nav>
         <ul>
           <li>
-            <a href=""><i class="ti ti-home"></i> Beranda</a>
+            <button id="home-button"><i class="ti ti-home"></i> Beranda</button>
           </li>
           <li>
             <button id="add-book-button">
@@ -31,10 +31,14 @@
             </button>
             <ul class="bookshelf-nav-content">
               <li>
-                <a href=""><i class="ti ti-books"></i> Belum Selesai Dibaca</a>
+                <button id="unfinished-bookshelf-button">
+                  <i class="ti ti-books"></i> Belum Selesai Dibaca
+                </button>
               </li>
               <li>
-                <a href=""><i class="ti ti-books"></i> Selesai Dibaca</a>
+                <button id="finished-bookshelf-button">
+                  <i class="ti ti-books"></i> Selesai Dibaca
+                </button>
               </li>
             </ul>
           </li>
@@ -110,12 +114,12 @@
         </div>
       </section>
 
-      <section class="card bookshelf" id="unfinished-book">
+      <section class="hidden card bookshelf" id="unfinished-bookshelf">
         <h2>Belum Selesai Dibaca</h2>
         <div id="unfinished-book-content"></div>
       </section>
 
-      <section class="card bookshelf" id="finished-book">
+      <section class="hidden card bookshelf" id="finished-bookshelf">
         <h2>Selesai Dibaca</h2>
         <div id="finished-book-content"></div>
       </section>
