@@ -200,8 +200,6 @@ form {
 .input-form {
   display: flex;
   flex-direction: column;
-
-  /* position: relative; */
 }
 
 .hide-label {
@@ -265,19 +263,27 @@ form button {
 
 .search-input-wrapper {
   display: flex;
-  justify-content: stretch;
+  align-items: center;
+  gap: 5px;
 
   width: 60%;
+  padding: 2px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
-.search-input-wrapper label {
-  flex: 1;
+.search-input-wrapper i {
+  color: gray;
+  flex: 10%;
 }
 
-.search-input-wrapper input {
-  flex: 5;
+input[type="search"] {
+  border: none;
+  flex: 90%;
+}
 
-  padding: 0 2px;
+input[type="search"]:focus {
+  outline: none;
 }
 
 .bookshelf,
