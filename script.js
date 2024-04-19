@@ -7,7 +7,8 @@ const finishedBookshelfButton = document.getElementById(
   "finished-bookshelf-button"
 );
 const addBookButton = document.getElementById("add-book-button");
-const cancelAddBookButton = document.getElementById("cancel-add-book-button");
+const cancelBookButton = document.getElementById("cancel-book-form-button");
+const bookForm = document.getElementById("book-form");
 const titleLabel = document.getElementById("title-label");
 const titleInput = document.getElementById("title");
 const authorLabel = document.getElementById("author-label");
@@ -15,10 +16,12 @@ const authorInput = document.getElementById("author");
 const yearLabel = document.getElementById("year-label");
 const yearInput = document.getElementById("year");
 const isCompleted = document.getElementById("is-completed");
-const submitAction = document.getElementById("book-form");
+const submitBookButton = document.getElementById("submit-book-form-button");
 const searchInput = document.getElementById("search-book");
 const finishedBookshelf = document.getElementById("finished-bookshelf");
 const unfinishedBookshelf = document.getElementById("unfinished-bookshelf");
+
+let submitFormHandler;
 
 floatingInputLabel(titleInput, titleLabel, "Judul");
 floatingInputLabel(authorInput, authorLabel, "Penulis");
@@ -59,26 +62,22 @@ homeNavButton.addEventListener("click", () => {
   finishedBookshelf.classList.add("bookshelf");
 });
 
-addBookButton.addEventListener("click", toggleShowAddBook);
+addBookButton.addEventListener("click", function () {
+  submitBookButton.innerText = "Tambah";
+  submitFormHandler = submitAddBookHandler;
+  toggleShowAddBook();
+});
 
-cancelAddBookButton.addEventListener("click", toggleShowAddBook);
-
-submitAction.addEventListener("submit", function (event) {
+bookForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const newBookData = {
-    id: generateId(),
-    title: titleInput.value,
-    author: authorInput.value,
-    year: yearInput.value,
-    isCompleted: isCompleted.checked,
-  };
-  putBookList(newBookData);
-
-  submitAction.reset();
-  unfocusAllInput();
-  toggleShowAddBook();
+  submitFormHandler();
+  resetAndToggleShowAddBook();
   renderBookList();
+});
+
+cancelBookButton.addEventListener("click", function () {
+  resetAndToggleShowAddBook();
 });
 
 searchInput.addEventListener("input", function (event) {
@@ -267,15 +266,20 @@ function generateBook(bookData) {
   const wrapper = document.createElement("div");
   const title = document.createElement("h3");
   const author = createElementWithClass("p", "book-author");
-  const buttonWrapper = document.createElement("div");
-  const deleteButton = createElementWithClass(
-    "button",
-    "delete-button",
-    "book-button",
-    "tooltip"
-  );
-  const trashIcon = createIconElement("trash");
   const authorIcon = createIconElement("user");
+  const buttonWrapper = createElementWithClass("div", "button-wrapper");
+  const deleteButton = createButtonWithIconAndTooltip(
+    "trash",
+    "Hapus buku",
+    "delete-button",
+    "book-button"
+  );
+  const editButton = createButtonWithIconAndTooltip(
+    "edit",
+    "Edit buku",
+    "edit-button",
+    "book-button"
+  );
 
   title.innerText = `${bookData.title} (${bookData.year})`;
 
@@ -283,16 +287,13 @@ function generateBook(bookData) {
   author.appendChild(authorIcon);
 
   if (bookData.isCompleted) {
-    const unfinishedButton = createElementWithClass(
-      "button",
+    const unfinishedButton = createButtonWithIconAndTooltip(
+      "arrows-sort",
+      "Belum selesai dibaca",
       "unfinished-book-button",
-      "book-button",
-      "tooltip"
+      "book-button"
     );
-    const moveIcon = createIconElement("arrows-sort");
 
-    unfinishedButton.appendChild(moveIcon);
-    unfinishedButton.setAttribute("data-tooltip", "Belum selesai dibaca");
     unfinishedButton.addEventListener("click", function () {
       createDialogElement(
         "Pindahkan Buku",
@@ -304,16 +305,13 @@ function generateBook(bookData) {
 
     buttonWrapper.appendChild(unfinishedButton);
   } else {
-    const finishedButton = createElementWithClass(
-      "button",
+    const finishedButton = createButtonWithIconAndTooltip(
+      "arrows-sort",
+      "Selesai dibaca",
       "finished-book-button",
-      "book-button",
-      "tooltip"
+      "book-button"
     );
-    const moveIcon = createIconElement("arrows-sort");
 
-    finishedButton.appendChild(moveIcon);
-    finishedButton.setAttribute("data-tooltip", "Selesai dibaca");
     finishedButton.addEventListener("click", function () {
       createDialogElement(
         "Pindahkan Buku",
@@ -326,14 +324,25 @@ function generateBook(bookData) {
     buttonWrapper.appendChild(finishedButton);
   }
 
-  deleteButton.appendChild(trashIcon);
-  deleteButton.setAttribute("data-tooltip", "Hapus buku");
-  deleteButton.setAttribute("name", "hapus");
   deleteButton.addEventListener("click", function () {
     deleteButtonHandler(bookData.id);
   });
 
+  editButton.addEventListener("click", function () {
+    titleInput.value = bookData.title;
+    authorInput.value = bookData.author;
+    yearInput.value = bookData.year;
+    isCompleted.checked = bookData.isCompleted;
+
+    submitBookButton.innerText = "Edit Buku";
+    submitFormHandler = function () {
+      submitEditBookHandler(bookData.id);
+    };
+    toggleShowAddBook();
+  });
+
   buttonWrapper.appendChild(deleteButton);
+  buttonWrapper.appendChild(editButton);
 
   wrapper.appendChild(title);
   wrapper.appendChild(author);
@@ -351,6 +360,16 @@ function createElementWithClass(element, ...classLists) {
   createdElement.classList.add(...classLists);
 
   return createdElement;
+}
+
+function createButtonWithIconAndTooltip(iconCode, tooltiptext, ...className) {
+  const button = createElementWithClass("button", "tooltip", ...className);
+  const icon = createIconElement(iconCode);
+
+  button.appendChild(icon);
+  button.setAttribute("data-tooltip", tooltiptext);
+
+  return button;
 }
 
 function deleteButtonHandler(bookID) {
@@ -595,4 +614,38 @@ function createIconElement(iconCode, className) {
   const i = createElementWithClass("i", "ti", `ti-${iconCode}`, className);
 
   return i;
+}
+
+function resetAndToggleShowAddBook() {
+  bookForm.reset();
+  unfocusAllInput();
+  toggleShowAddBook();
+}
+
+function submitAddBookHandler() {
+  const newBookData = {
+    id: generateId(),
+    title: titleInput.value,
+    author: authorInput.value,
+    year: yearInput.value,
+    isCompleted: isCompleted.checked,
+  };
+  putBookList(newBookData);
+}
+
+function submitEditBookHandler(bookID) {
+  const bookData = getBookList();
+  const bookTargetIndex = findBookIndex(bookID);
+
+  const newBookData = {
+    id: bookID,
+    title: titleInput.value,
+    author: authorInput.value,
+    year: yearInput.value,
+    isCompleted: isCompleted.checked,
+  };
+  bookData[bookTargetIndex] = newBookData;
+
+  overideBookList(bookData);
+  alert("Buku berhasil diedit");
 }

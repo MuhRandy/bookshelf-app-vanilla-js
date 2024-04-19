@@ -238,14 +238,6 @@ form {
   font-size: 20px;
 }
 
-.form-button-wrapper {
-  display: flex;
-  justify-content: stretch;
-  gap: 10px;
-
-  width: 100%;
-}
-
 form button {
   flex: 1;
 
@@ -343,7 +335,10 @@ input[type="search"]:focus {
 
 .delete-button {
   background-color: red;
-  margin-left: 5px;
+}
+
+.edit-button {
+  background-color: green;
 }
 
 #custom-dialog {
