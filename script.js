@@ -93,14 +93,16 @@ searchInput.addEventListener("input", function (event) {
 
 // Functions
 function floatingInputLabel(inputElement, labelElement, placeholder) {
+  labelElement.classList.add("hide-label");
+
   inputElement.addEventListener("focus", function () {
-    labelElement.removeAttribute("hidden");
+    labelElement.classList.add("show-label");
     this.removeAttribute("placeholder");
   });
 
   inputElement.addEventListener("blur", function () {
     if (this.value.length === 0) {
-      labelElement.setAttribute("hidden", "true");
+      labelElement.classList.remove("show-label");
       this.setAttribute("placeholder", placeholder);
       this.classList.remove("input-has-value");
     } else {
