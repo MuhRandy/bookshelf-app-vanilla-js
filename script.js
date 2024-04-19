@@ -273,9 +273,12 @@ function generateBook(bookData) {
     "tooltip"
   );
   const trashIcon = createIconElement("trash");
+  const authorIcon = createIconElement("user");
 
   title.innerText = `${bookData.title} (${bookData.year})`;
+
   author.innerText = bookData.author;
+  author.appendChild(authorIcon);
 
   if (bookData.isCompleted) {
     const unfinishedButton = createElementWithClass(
