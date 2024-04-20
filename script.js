@@ -35,9 +35,9 @@ floatingInputLabel(yearInput, yearLabel, "Tahun");
 
 window.addEventListener("load", function () {
   if (checkForStorage) {
-    // alert(
-    //   "Jika ingin generate Fake Data, Anda bisa jalankan generateFakeData() pada console"
-    // );
+    alert(
+      "Jika ingin generate Buku, Anda bisa ketikkan \\generateBuku pada pencarian judul."
+    );
     renderBookList();
   } else {
     alert("Browser yang Anda gunakan tidak mendukung Web Storage");
@@ -92,7 +92,19 @@ searchInput.addEventListener("input", function (event) {
   const searchValue = event.target.value;
 
   if (searchValue.length > 0) {
-    renderSearchBookList(searchValue);
+    if (searchValue === `\\generateBuku`) {
+      if (
+        confirm(
+          "Buku yang sudah anda masukkan sebelumnya akan digantikan. Anda yakin ingin generate buku?"
+        )
+      ) {
+        generateFakeData();
+      }
+      searchInput.value = "";
+      renderBookList();
+    } else {
+      renderSearchBookList(searchValue);
+    }
   } else {
     renderBookList();
   }
@@ -307,7 +319,8 @@ function generateBook(bookData) {
         "Pindahkan Buku",
         `Pindahkan buku dengan judul ${bookData.title} ke rak Belum Selesai Dibaca?`,
         "Pindahkan",
-        () => toggleIsCompletedButtonHandler(bookData.id)
+        () => toggleIsCompletedButtonHandler(bookData.id),
+        "Buku berhasil dipindahkan"
       );
     });
 
@@ -325,7 +338,8 @@ function generateBook(bookData) {
         "Pindahkan Buku",
         `Pindahkan buku dengan judul ${bookData.title} ke rak Selesai Dibaca?`,
         "Pindahkan",
-        () => toggleIsCompletedButtonHandler(bookData.id)
+        () => toggleIsCompletedButtonHandler(bookData.id),
+        "Buku berhasil dipindahkan"
       );
     });
 
@@ -389,7 +403,8 @@ function deleteButtonHandler(bookID) {
     "Hapus Buku",
     `Hapus buku dengan judul ${bookData[bookTarget].title}`,
     "Hapus",
-    () => deleteBook(bookID)
+    () => deleteBook(bookID),
+    "Buku berhasil dihapus"
   );
 }
 
@@ -443,7 +458,8 @@ function createDialogElement(
   dialogTitle,
   dialogDescription,
   confirmText,
-  confirmButtonHandler
+  confirmButtonHandler,
+  alertMessage
 ) {
   const main = document.querySelector("main");
   const section = createElementWithClass("section", "show");
@@ -496,6 +512,7 @@ function createDialogElement(
   dialogConfirmButton.addEventListener("click", function () {
     confirmButtonHandler();
     main.removeChild(customDialog);
+    alert(alertMessage);
   });
 
   dialogCancelButton.addEventListener("click", function () {
@@ -640,6 +657,7 @@ function submitAddBookHandler() {
     isCompleted: isCompleted.checked,
   };
   putBookList(newBookData);
+  alert("Buku berhasil ditambahkan");
 }
 
 function submitEditBookHandler(bookID) {
