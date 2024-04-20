@@ -14,13 +14,15 @@
   <body>
     <header>
       <h1><i class="ti ti-books"></i>Bookshelf Apps</h1>
-      <nav>
+      <nav class="dekstop-navbar">
         <ul>
           <li>
-            <button id="home-button"><i class="ti ti-home"></i> Beranda</button>
+            <button class="home-button">
+              <i class="ti ti-home"></i> Beranda
+            </button>
           </li>
           <li>
-            <button id="add-book-button">
+            <button class="add-book-button">
               <i class="ti ti-plus"></i><i class="ti ti-book-2"></i> Tambah Buku
             </button>
           </li>
@@ -31,12 +33,12 @@
             </button>
             <ul class="bookshelf-nav-content">
               <li>
-                <button id="unfinished-bookshelf-button">
+                <button class="unfinished-bookshelf-button">
                   <i class="ti ti-books"></i> Belum Selesai Dibaca
                 </button>
               </li>
               <li>
-                <button id="finished-bookshelf-button">
+                <button class="finished-bookshelf-button">
                   <i class="ti ti-books"></i> Selesai Dibaca
                 </button>
               </li>
@@ -44,12 +46,52 @@
           </li>
         </ul>
       </nav>
+
+      <div id="open-menu-mobile">
+        <i class="ti ti-menu-2"></i>
+      </div>
+
+      <nav id="mobile-navbar" class="hide-navbar-menu">
+        <article
+          id="mobile-navbar-container"
+          class="hide-navbar-menu-container"
+        >
+          <h2>Menu</h2>
+          <ul>
+            <li>
+              <button class="add-book-button">
+                <i class="ti ti-plus"></i><i class="ti ti-book-2"></i> Tambah
+                Buku
+              </button>
+              <hr />
+            </li>
+            <li>
+              <button class="home-button">
+                <i class="ti ti-home"></i> Beranda
+              </button>
+              <hr />
+            </li>
+            <li>
+              <button class="unfinished-bookshelf-button">
+                <i class="ti ti-books"></i> Belum Selesai Dibaca
+              </button>
+              <hr />
+            </li>
+            <li>
+              <button class="finished-bookshelf-button">
+                <i class="ti ti-books"></i> Selesai Dibaca
+              </button>
+              <hr />
+            </li>
+          </ul>
+        </article>
+      </nav>
     </header>
 
     <main>
-      <section id="add-book" class="hidden">
+      <section id="add-edit-book" class="hidden">
         <div class="card">
-          <h2>Tambah Buku</h2>
+          <h2 id="add-edit-book-title"></h2>
 
           <form id="book-form">
             <i class="ti ti-book-2 form-book-icon"></i>
