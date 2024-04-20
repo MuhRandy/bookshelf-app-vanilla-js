@@ -196,7 +196,7 @@ function renderBookList() {
   }
 
   for (let book of bookData) {
-    if (book.isCompleted) {
+    if (book.isComplete) {
       finishedBookList.appendChild(generateBook(book));
       if (countFinishedBook > 1) {
         finishedBookList.classList.add("more-than-one-book");
@@ -225,7 +225,7 @@ function renderSearchBookList(searchValue) {
 
   for (let book of bookData) {
     if (regex.test(book.title)) {
-      if (book.isCompleted) {
+      if (book.isComplete) {
         finishedBookList.appendChild(generateBook(book));
         countFinishedBookSearch += 1;
         if (countFinishedBookSearch > 1) {
@@ -253,7 +253,7 @@ function renderSearchBookList(searchValue) {
 function countFinishedBookList(bookData) {
   let count = 0;
   for (const book of bookData) {
-    if (book.isCompleted) {
+    if (book.isComplete) {
       count += 1;
     }
   }
@@ -263,7 +263,7 @@ function countFinishedBookList(bookData) {
 function countUnfinishedBookList(bookData) {
   let count = 0;
   for (const book of bookData) {
-    if (!book.isCompleted) {
+    if (!book.isComplete) {
       count += 1;
     }
   }
@@ -306,7 +306,7 @@ function generateBook(bookData) {
   author.innerText = bookData.author;
   author.appendChild(authorIcon);
 
-  if (bookData.isCompleted) {
+  if (bookData.isComplete) {
     const unfinishedButton = createButtonWithIconAndTooltip(
       "arrows-sort",
       "Belum selesai dibaca",
@@ -354,7 +354,7 @@ function generateBook(bookData) {
     titleInput.value = bookData.title;
     authorInput.value = bookData.author;
     yearInput.value = bookData.year;
-    isCompleted.checked = bookData.isCompleted;
+    isCompleted.checked = bookData.isComplete;
 
     submitBookButton.innerText = "Edit";
     addEditBookTitle.innerText = "Edit Buku";
@@ -426,7 +426,7 @@ function toggleIsCompletedButtonHandler(bookID) {
   const bookData = getBookList();
   const bookIndex = findBookIndex(bookID);
 
-  bookData[bookIndex].isCompleted = !bookData[bookIndex].isCompleted;
+  bookData[bookIndex].isComplete = !bookData[bookIndex].isComplete;
   overideBookList(bookData);
 
   renderBookList();
@@ -527,105 +527,105 @@ function generateFakeData() {
       title: "The Subtle Art of not Giving a F*ck",
       author: "Mark Manson",
       year: 2016,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 456789123,
       title: "The Psychology of Money",
       author: "Morgan Housel",
       year: 2020,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 147258369,
       title: "Sapiens: A Brief History of Humankind",
       author: "Yuval Noah Harari",
       year: 2014,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 789123456,
       title: "Atomic Habits",
       author: "James Clear",
       year: 2018,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 654321987,
       title: "Educated",
       author: "Tara Westover",
       year: 2018,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 321654987,
       title: "The Alchemist",
       author: "Paulo Coelho",
       year: 1988,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 789456123,
       title: "1984",
       author: "George Orwell",
       year: 1949,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 159753468,
       title: "To Kill a Mockingbird",
       author: "Harper Lee",
       year: 1960,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 369258147,
       title: "Harry Potter and the Sorcerer's Stone",
       author: "J.K. Rowling",
       year: 1997,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 852741963,
       title: "The Great Gatsby",
       author: "F. Scott Fitzgerald",
       year: 1925,
-      isCompleted: true,
+      isComplete: true,
     },
     {
       id: 123456789,
       title: "The Catcher in the Rye",
       author: "J.D. Salinger",
       year: 1951,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 951236874,
       title: "Pride and Prejudice",
       author: "Jane Austen",
       year: 1813,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 456123789,
       title: "The Hobbit",
       author: "J.R.R. Tolkien",
       year: 1937,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 789632145,
       title: "The Lord of the Rings",
       author: "J.R.R. Tolkien",
       year: 1954,
-      isCompleted: false,
+      isComplete: false,
     },
     {
       id: 369874512,
       title: "Crime and Punishment",
       author: "Fyodor Dostoevsky",
       year: 1866,
-      isCompleted: false,
+      isComplete: false,
     },
   ];
 
@@ -653,8 +653,8 @@ function submitAddBookHandler() {
     id: generateId(),
     title: titleInput.value,
     author: authorInput.value,
-    year: yearInput.value,
-    isCompleted: isCompleted.checked,
+    year: parseInt(yearInput.value),
+    isComplete: isCompleted.checked,
   };
   putBookList(newBookData);
   alert("Buku berhasil ditambahkan");
@@ -668,8 +668,8 @@ function submitEditBookHandler(bookID) {
     id: bookID,
     title: titleInput.value,
     author: authorInput.value,
-    year: yearInput.value,
-    isCompleted: isCompleted.checked,
+    year: parseInt(yearInput.value),
+    isComplete: isCompleted.checked,
   };
   bookData[bookTargetIndex] = newBookData;
 
